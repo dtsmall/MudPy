@@ -15,12 +15,12 @@ def envelope(n,e,z,fcorner=None,Ncomponents=3):
     
     from obspy.signal.filter import envelope
     from mudpy.forward import lowpass
+    from numpy import log,log10,power
     
     #remove pre-event baseline    
     n[0].data-=n[0].data[0]
     e[0].data-=e[0].data[0]
     z[0].data-=z[0].data[0]
-    
     
     #Initalize per-component envelopes
     nenv=n.copy()
@@ -132,7 +132,10 @@ def Nstack(st,N=1,normalize=True):
         
         #Normalize the data?
         if normalize==True:
-            data=abs(st[k].data)/max(abs(st[k].data))
+            if max(abs(st[k].data))==0:
+                data=abs(st[k].data)
+            else:
+                data=abs(st[k].data)/max(abs(st[k].data))
         else:
             data=abs(st[k].data)
         
